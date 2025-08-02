@@ -729,6 +729,23 @@ python-dateutil = ">=2.7"
 dev = ["meson-python (>=0.13.1,<0.17.0)", "pybind11 (>=2.13.2,!=2.13.3)", "setuptools (>=64)", "setuptools_scm (>=7)"]
 
 [[package]]
+name = "meteostat"
+version = "1.7.4"
+description = "Access and analyze historical weather and climate data with Python."
+optional = false
+python-versions = ">=3.8.0"
+groups = ["main"]
+files = [
+    {file = "meteostat-1.7.4-py3-none-any.whl", hash = "sha256:abb6603ff91afaf21907401dfb07b2682e992f8df8efbacdc73b08a534fc7c75"},
+    {file = "meteostat-1.7.4.tar.gz", hash = "sha256:715f9af15e854570ee7ba594e1bc4c396d95f85344d7f82c0acaa0a30585a3e3"},
+]
+
+[package.dependencies]
+numpy = "*"
+pandas = ">=2"
+pytz = "*"
+
+[[package]]
 name = "narwhals"
 version = "2.0.1"
 description = "Extremely lightweight compatibility layer between dataframe libraries"
@@ -1606,4 +1623,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "6c01c2b7a9a195d9b89c42006ba4aafed495b223f8e69fc9f2bc3e2687829468"
+content-hash = "8179c5a7b3ae849d7683502dbbaf6d5f0e333416d7ddf5f1a1565a4db3bea5ef"
