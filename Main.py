@@ -17,12 +17,21 @@ coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
 # call api's and handle bad location name input
 city_name = st.text_input("Please Enter a City Name: ")
-params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
-params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
-params_location = {"q": city_name, "limit": 1, "appid": appid}
-coordinates = requests.get(coordinates_url,params=params_location)
-coordinates.raise_for_status()
-coordinates_post = coordinates.json()
+
+# Only proceed if city_name is entered
+if city_name:
+    params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
+    params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
+    params_location = {"q": city_name, "limit": 1, "appid": appid}
+    coordinates = requests.get(coordinates_url,params=params_location)
+    coordinates.raise_for_status()
+    coordinates_post = coordinates.json()
+    # check if location was found
+    if not coordinates_post:
+        st.error("Location Not Found. lease Enter a City Name Again: ")
+        st.stop()
+else:
+    st.info("Please Enter a City Name: ")
 
 lat = coordinates_post[0]['lat']
 lon = coordinates_post[0]['lon']
