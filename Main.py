@@ -16,42 +16,32 @@ forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
 # call api's and handle bad location name input
-while True:
-  city_name = st.text_input("Please Enter a City Name: ",key="city_input_main")
-  params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
-  params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
-  params_location = {"q": city_name, "limit": 1, "appid": appid}
-  try:
-    coordinates = requests.get(coordinates_url,params=params_location)
-    coordinates.raise_for_status()
-    coordinates_post = coordinates.json()
-    if not coordinates_post:
-      print("❌ City not found. Please try again.")
-      continue
-    # only runs if coordinates_post is not empty:
-    lat = coordinates_post[0]['lat']
-    lon = coordinates_post[0]['lon']
+city_name = st.text_input("Please Enter a City Name: ")
+params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
+params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
+params_location = {"q": city_name, "limit": 1, "appid": appid}
+coordinates = requests.get(coordinates_url,params=params_location)
+coordinates.raise_for_status()
+coordinates_post = coordinates.json()
 
-    # current weather data
-    curr_weather_imperial = requests.get(curr_weather_url,params=params_imperial)
-    curr_weather_imperial.raise_for_status()
-    curr_weather_imperial_post = curr_weather_imperial.json()
-    curr_weather_metric = requests.get(curr_weather_url,params=params_metric)
-    curr_weather_metric.raise_for_status()
-    curr_weather_metric_post = curr_weather_metric.json()
+lat = coordinates_post[0]['lat']
+lon = coordinates_post[0]['lon']
 
-    # weather forecast data
-    forecast_imperial = requests.get(forecast_url,params=params_imperial)
-    forecast_imperial.raise_for_status()
-    forecast_imperial_post = forecast_imperial.json()
-    forecast_metric = requests.get(forecast_url,params=params_metric)
-    forecast_metric.raise_for_status()
-    forecast_metric_post = forecast_metric.json()
-    break # api data retrieved successfully
-  except requests.exceptions.RequestException as error:
-        print(f"❌ Error Fetching Data: {error}")
-        print("🔁 Please Enter a City Name Again: ")
-        continue
+ # current weather data
+curr_weather_imperial = requests.get(curr_weather_url,params=params_imperial)
+curr_weather_imperial.raise_for_status()
+curr_weather_imperial_post = curr_weather_imperial.json()
+curr_weather_metric = requests.get(curr_weather_url,params=params_metric)
+curr_weather_metric.raise_for_status()
+curr_weather_metric_post = curr_weather_metric.json()
+
+# weather forecast data
+forecast_imperial = requests.get(forecast_url,params=params_imperial)
+forecast_imperial.raise_for_status()
+forecast_imperial_post = forecast_imperial.json()
+forecast_metric = requests.get(forecast_url,params=params_metric)
+forecast_metric.raise_for_status()
+forecast_metric_post = forecast_metric.json()
 
 # add time conversion for local time
 utc_timestamp = curr_weather_imperial_post['dt']
