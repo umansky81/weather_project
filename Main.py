@@ -11,7 +11,7 @@ import json
 from collections import defaultdict, Counter
 
 # add url addresses
-appid = os.getenv("OPENWEATHER_API_KEY")
+appid = "9c52e999ca8280b5b1b549f0bf56dc82"
 curr_weather_url = "https://api.openweathermap.org/data/2.5/weather"
 forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
