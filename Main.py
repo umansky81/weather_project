@@ -173,5 +173,6 @@ if city_name:
 
 
     st.write(daily_summary_metric)
+    print("Loaded API Key:", os.getenv("OPENWEATHER_API_KEY"))
 else:
     st.info("👆 Enter a City Name Above to See Weather Data")
