@@ -17,7 +17,7 @@ coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
 # call api's and handle bad location name input
 while True:
-  city_name = st.text_input("Please Enter a City Name: ",key="city_input")
+  city_name = st.text_input("Please Enter a City Name: ",key="city_input_main")
   params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
   params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
   params_location = {"q": city_name, "limit": 1, "appid": appid}
