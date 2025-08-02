@@ -6,11 +6,12 @@ import seaborn as sns
 import datetime as dt
 import meteostat as ms
 import requests
+import os
 import json
 from collections import defaultdict, Counter
 
 # add url addresses
-appid = "ab5ee82b26f153106f2564b347dfd369"
+appid = os.getenv("ab5ee82b26f153106f2564b347dfd369")
 curr_weather_url = "https://api.openweathermap.org/data/2.5/weather"
 forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
