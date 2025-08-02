@@ -16,7 +16,7 @@ forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
 # call api's and handle bad location name input
-city_name = st.text_input("Please Enter a City Name: ")
+city_name = st.text_input("City Name: ")
 
 # Only proceed if city_name is entered
 if city_name:
@@ -172,4 +172,4 @@ if city_name:
 
     st.write(daily_summary_metric)
 else:
-    st.info("Please Enter a City Name: ")
+    st.info("👆 Enter a City Name Above to See Weather Data")
