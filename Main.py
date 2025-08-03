@@ -56,10 +56,29 @@ else:
 params_imperial = {"lat": lat, "lon": lon, 'units': 'imperial', "appid": appid}
 params_metric = {"lat": lat, "lon": lon, 'units': 'metric', "appid": appid}
 
-curr_weather_imperial_post = requests.get(curr_weather_url, params=params_imperial).json()
-curr_weather_metric_post = requests.get(curr_weather_url, params=params_metric).json()
-forecast_imperial_post = requests.get(forecast_url, params=params_imperial).json()
-forecast_metric_post = requests.get(forecast_url, params=params_metric).json()
+# Fetch current weather
+curr_weather_imperial = requests.get(curr_weather_url, params=params_imperial)
+curr_weather_metric = requests.get(curr_weather_url, params=params_metric)
+
+# Check for errors
+if curr_weather_imperial.status_code != 200:
+    st.error(f"❌ Error fetching imperial weather data: {curr_weather_imperial.json().get('message', 'Unknown error')}")
+    st.stop()
+
+if curr_weather_metric.status_code != 200:
+    st.error(f"❌ Error fetching metric weather data: {curr_weather_metric.json().get('message', 'Unknown error')}")
+    st.stop()
+
+# Parse JSON safely
+curr_weather_imperial_post = curr_weather_imperial.json()
+curr_weather_metric_post = curr_weather_metric.json()
+
+# Validate expected keys
+if 'dt' not in curr_weather_imperial_post or 'timezone' not in curr_weather_imperial_post:
+    st.error("❌ Unexpected response format. Please try a different location.")
+    st.json(curr_weather_imperial_post)  # Show the raw response for debugging
+    st.stop()
+
 
 # --- Time Conversion ---
 utc_timestamp = curr_weather_imperial_post['dt']
