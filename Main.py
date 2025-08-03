@@ -198,4 +198,4 @@ else:
             'tavg_f': 'Temp_F_Avg'
         }, inplace=True)
 
-        st.write(df_agg)
+        st.write(daily_summary_metric)
