@@ -21,7 +21,7 @@ coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
-st.title("🌦️ Welcome to Your Weather Companion")
+st.title("🌦️ Welcome to DS20 Weather Project!")
 st.markdown("Enter a city name or select a location on the map to get weather updates.")
 
 # --- Input Options ---
