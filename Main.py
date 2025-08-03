@@ -57,7 +57,8 @@ if map_data and map_data.get("last_clicked"):
     st.session_state.city_name = None  # Clear previous city name
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
     if "city_input" in st.session_state:
-        st.session_state["city_input"] = "" # Clear the text input field
+        st.session_state["city_input"] = ""
+        st.experimental_rerun()
 
 # Only proceed if city_name is entered
 elif st.session_state.input_source == 'city' and st.session_state.city_name:
