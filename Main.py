@@ -19,13 +19,23 @@ curr_weather_url = "https://api.openweathermap.org/data/2.5/weather"
 forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
+# --- Session State Setup ---
+if 'input_source' not in st.session_state:
+    st.session_state.input_source = None
+if 'city_name' not in st.session_state:
+    st.session_state.city_name = None
+
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
 st.title("🌦️ Welcome to Your Weather Companion")
 st.markdown("Enter a city name or select a location on the map to get weather updates.")
 
 # --- Input Options ---
-city_name = st.text_input("📍 Enter City Name")
+city_name_input = st.text_input("📍 Enter City Name")
+
+if city_name_input:
+    st.session_state.input_source = 'city'
+    st.session_state.city_name = city_name_input
 
 st.markdown("### 🗺️ Or choose a location on the map")
 default_location = [32.0853, 34.7818]  # Tel Aviv
@@ -41,11 +51,13 @@ use_coordinates_directly = False
 if map_data and map_data.get("last_clicked"):
     lat = map_data["last_clicked"]["lat"]
     lon = map_data["last_clicked"]["lng"]
+    st.session_state.input_source = 'map'
+    st.session_state.city_name = None  # Clear previous city name
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
 
 # Only proceed if city_name is entered
-elif city_name:
-    params_location = {"q": city_name, "limit": 1, "appid": appid}
+elif st.session_state.input_source == 'city' and st.session_state.city_name:
+    params_location = {"q": st.session_state.city_name, "limit": 1, "appid": appid}
     coordinates = requests.get(coordinates_url, params=params_location)
     coordinates.raise_for_status()
     coordinates_post = coordinates.json()
@@ -54,7 +66,7 @@ elif city_name:
         st.stop()
     lat = coordinates_post[0]['lat']
     lon = coordinates_post[0]['lon']
-    st.success(f"📍 Found {city_name.title()} at Latitude {lat:.2f}, Longitude {lon:.2f}")
+    st.success(f"📍 Found {st.session_state.city_name.title()} at Latitude {lat:.2f}, Longitude {lon:.2f}")
 else:
     st.info("👆 Enter a City Name or Click on the Map to See Weather Data")
     st.stop()
@@ -197,5 +209,9 @@ else:
             'tavg': 'Temp_C_Avg',
             'tavg_f': 'Temp_F_Avg'
         }, inplace=True)
+        if st.session_state.input_source == 'city' and st.session_state.city_name:
+            st.write(f"Weather for: **{st.session_state.city_name.title()}**")
+        elif st.session_state.input_source == 'map':
+            st.write(f"Weather for coordinates: **{lat:.2f}, {lon:.2f}**")
 
         st.write(daily_summary_metric)
