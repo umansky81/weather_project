@@ -24,6 +24,8 @@ if 'input_source' not in st.session_state:
     st.session_state.input_source = None
 if 'city_name' not in st.session_state:
     st.session_state.city_name = None
+if 'city_input' not in st.session_state:
+    st.session_state.city_input = ""
 
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
@@ -54,7 +56,8 @@ if map_data and map_data.get("last_clicked"):
     st.session_state.input_source = 'map'
     st.session_state.city_name = None  # Clear previous city name
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
-    st.session_state.city_input = ""  # Clear the text input field
+    if "city_input" in st.session_state:
+        st.session_state["city_input"] = "" # Clear the text input field
 
 # Only proceed if city_name is entered
 elif st.session_state.input_source == 'city' and st.session_state.city_name:
