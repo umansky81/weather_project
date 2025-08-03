@@ -167,33 +167,35 @@ for date, items in date_list_metric.items():
 
     daily_summary_metric.append(daily_metric)
 
-# add historic average temp from meteostat
-location = ms.Point(lat,lon)
-date_to = dt.datetime.now()
-date_from = date_to - dt.timedelta(days=365)
-ms_data = ms.Daily(location,date_from,date_to)
+# Find nearest weather station
+stations = ms.Stations()
+stations = stations.nearby(lat, lon)
+station = stations.fetch(1)
 
-# keep only temp data
-df = ms_data.fetch()
-
-# drop rows with missing values
-if df.empty or 'tavg' not in df.columns:
-    st.warning("⚠️ No historical temperature data available for this location.")
+if station.empty:
+    st.warning("⚠️ No nearby weather station found for historical data.")
 else:
-    df = df.dropna(subset=['tavg'])
-    # adjust month formatting and keep necessary fields only
-    df = df.reset_index()
-    df['month'] = df['time'].dt.strftime('%m-%Y')
-    df = df[['time', 'tavg', 'month']]
+    station_id = station.index[0]
+    date_to = dt.datetime.now()
+    date_from = date_to - dt.timedelta(days=365)
+    ms_data = ms.Daily(station_id, date_from, date_to)
+    df = ms_data.fetch()
 
-    # aggregate historically by month , add in ferenheit as well
-    df_agg = df.groupby('month').agg({'tavg': 'mean'})
-    df_agg['tavg_f'] = df_agg['tavg'] * 9/5 + 32
-    df_agg['tavg'] = df_agg['tavg'].round().astype(int)
-    df_agg['tavg_f'] = df_agg['tavg_f'].round().astype(int)
-    df_agg.rename(columns={
-        'tavg': 'Temp_C_Avg',
-        'tavg_f': 'Temp_F_Avg'
-    }, inplace=True)
-    st.write(daily_summary_metric)
-    print("Loaded API Key:", os.getenv("OPENWEATHER_API_KEY"))
+    if df.empty or 'tavg' not in df.columns:
+        st.warning("⚠️ No historical temperature data available for this location.")
+    else:
+        df = df.dropna(subset=['tavg'])
+        df = df.reset_index()
+        df['month'] = df['time'].dt.strftime('%m-%Y')
+        df = df[['time', 'tavg', 'month']]
+
+        df_agg = df.groupby('month').agg({'tavg': 'mean'})
+        df_agg['tavg_f'] = df_agg['tavg'] * 9/5 + 32
+        df_agg['tavg'] = df_agg['tavg'].round().astype(int)
+        df_agg['tavg_f'] = df_agg['tavg_f'].round().astype(int)
+        df_agg.rename(columns={
+            'tavg': 'Temp_C_Avg',
+            'tavg_f': 'Temp_F_Avg'
+        }, inplace=True)
+
+        st.write(df_agg)
