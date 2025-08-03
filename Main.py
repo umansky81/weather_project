@@ -23,7 +23,7 @@ coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
 st.markdown(
     "<h1 style='text-align: center; font-size: 36px;'>🌦️ Welcome to DS20 Weather Project!</h1>",unsafe_allow_html=True)
-st.markdown("<h4 style='text-align: center;'>Enter a city name or select a location on the map to get weather updates.</h4>",unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center; font-size: 20px;'>Enter a city name or select a location on the map to get weather updates.</h4>",unsafe_allow_html=True)
 
 # --- Input Options ---
 st.markdown("<h4 style='text-align: center;'>📍 Enter City Name</h4>", unsafe_allow_html=True)
