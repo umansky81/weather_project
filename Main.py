@@ -26,6 +26,9 @@ if 'city_name' not in st.session_state:
     st.session_state.city_name = None
 if 'city_input' not in st.session_state:
     st.session_state.city_input = ""
+if 'clear_city_input' not in st.session_state:
+    st.session_state.clear_city_input = False
+
 
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
@@ -33,7 +36,12 @@ st.title("🌦️ Welcome to Your Weather Companion")
 st.markdown("Enter a city name or select a location on the map to get weather updates.")
 
 # --- Input Options ---
-city_name_input = st.text_input("📍 Enter City Name",key="city_input")
+if st.session_state.clear_city_input:
+    st.session_state.city_input = ""
+    st.session_state.clear_city_input = False
+
+city_name_input = st.text_input("📍 Enter City Name", key="city_input")
+
 
 if city_name_input:
     st.session_state.input_source = 'city'
@@ -49,7 +57,6 @@ map_data = st_folium(m, width=700, height=500)
 lat, lon = None, None
 use_coordinates_directly = False
 
-
 if map_data and map_data.get("last_clicked"):
     lat = map_data["last_clicked"]["lat"]
     lon = map_data["last_clicked"]["lng"]
@@ -57,7 +64,7 @@ if map_data and map_data.get("last_clicked"):
     st.session_state.city_name = None  # Clear previous city name
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
     if "city_input" in st.session_state:
-        st.session_state["city_input"] = ""
+        st.session_state.clear_city_input = True
         st.experimental_rerun()
 
 # Only proceed if city_name is entered
