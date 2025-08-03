@@ -22,15 +22,13 @@ coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
 st.markdown(
-    "<h1 style='text-align: center; font-size: 36px;'>🌦️ Welcome to DS20 Weather Project!</h1>",
-    unsafe_allow_html=True
-)
-st.markdown("Enter a city name or select a location on the map to get weather updates.")
+    "<h1 style='text-align: center; font-size: 36px;'>🌦️ Welcome to DS20 Weather Project!</h1>",unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center;'>Enter a city name or select a location on the map to get weather updates.</h4>",unsafe_allow_html=True)
 
 # --- Input Options ---
-city_name = st.text_input("📍 Enter City Name")
-
-st.markdown("### 🗺️ Or choose a location on the map")
+st.markdown("<h4 style='text-align: center;'>📍 Enter City Name</h4>", unsafe_allow_html=True)
+city_name = st.text_input("", key="city_name_input")
+st.markdown("<h4 style='text-align: center;'>🗺️ Or choose a location on the map</h4>", unsafe_allow_html=True)
 default_location = [32.0853, 34.7818]  # Tel Aviv
 m = folium.Map(location=default_location, zoom_start=6)
 folium.Marker(location=default_location, popup="Tel Aviv").add_to(m)
