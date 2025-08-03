@@ -177,25 +177,23 @@ ms_data = ms.Daily(location,date_from,date_to)
 df = ms_data.fetch()
 
 # drop rows with missing values
-df = df.dropna(subset=['tavg'])
+if df.empty or 'tavg' not in df.columns:
+    st.warning("⚠️ No historical temperature data available for this location.")
+else:
+    df = df.dropna(subset=['tavg'])
+    # adjust month formatting and keep necessary fields only
+    df = df.reset_index()
+    df['month'] = df['time'].dt.strftime('%m-%Y')
+    df = df[['time', 'tavg', 'month']]
 
-# adjust month formatting and keep necessary fields only
-df = df.reset_index()
-df['month'] = df['time'].dt.strftime('%m-%Y')
-df = df[['time', 'tavg', 'month']]
-
-# aggregate historically by month , add in ferenheit as well
-df_agg = df.groupby('month').agg({'tavg': 'mean'})
-df_agg['tavg_f'] = df_agg['tavg'] * 9/5 + 32
-
-df_agg['tavg'] = df_agg['tavg'].round().astype(int)
-df_agg['tavg_f'] = df_agg['tavg_f'].round().astype(int)
-
-df_agg.rename(columns={
-    'tavg': 'Temp_C_Avg',
-    'tavg_f': 'Temp_F_Avg'
-}, inplace=True)
-
-
-st.write(daily_summary_metric)
-print("Loaded API Key:", os.getenv("OPENWEATHER_API_KEY"))
+    # aggregate historically by month , add in ferenheit as well
+    df_agg = df.groupby('month').agg({'tavg': 'mean'})
+    df_agg['tavg_f'] = df_agg['tavg'] * 9/5 + 32
+    df_agg['tavg'] = df_agg['tavg'].round().astype(int)
+    df_agg['tavg_f'] = df_agg['tavg_f'].round().astype(int)
+    df_agg.rename(columns={
+        'tavg': 'Temp_C_Avg',
+        'tavg_f': 'Temp_F_Avg'
+    }, inplace=True)
+    st.write(daily_summary_metric)
+    print("Loaded API Key:", os.getenv("OPENWEATHER_API_KEY"))
