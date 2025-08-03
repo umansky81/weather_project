@@ -31,7 +31,7 @@ st.title("🌦️ Welcome to Your Weather Companion")
 st.markdown("Enter a city name or select a location on the map to get weather updates.")
 
 # --- Input Options ---
-city_name_input = st.text_input("📍 Enter City Name")
+city_name_input = st.text_input("📍 Enter City Name",key="city_input")
 
 if city_name_input:
     st.session_state.input_source = 'city'
@@ -54,6 +54,7 @@ if map_data and map_data.get("last_clicked"):
     st.session_state.input_source = 'map'
     st.session_state.city_name = None  # Clear previous city name
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
+    st.session_state.city_input = ""  # Clear the text input field
 
 # Only proceed if city_name is entered
 elif st.session_state.input_source == 'city' and st.session_state.city_name:
