@@ -13,20 +13,36 @@ from collections import defaultdict, Counter
 from dotenv import load_dotenv
 from streamlit_folium import st_folium
 
-
-
-
 # add url addresses
 appid = "9c52e999ca8280b5b1b549f0bf56dc82"
 curr_weather_url = "https://api.openweathermap.org/data/2.5/weather"
 forecast_url = "https://api.openweathermap.org/data/2.5/forecast"
 coordinates_url = "http://api.openweathermap.org/geo/1.0/direct"
 
-# call api's and handle bad location name input
-city_name = st.text_input("City Name: ")
+# UI Setup
+st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
+st.title("🌦️ Welcome to Your Weather Companion")
+st.markdown("Enter a city name or select a location on the map to get weather updates.")
+
+# --- Input Options ---
+city_name = st.text_input("📍 Enter City Name")
+
+st.markdown("### 🗺️ Or choose a location on the map")
+default_location = [32.0853, 34.7818]  # Tel Aviv
+m = folium.Map(location=default_location, zoom_start=6)
+folium.Marker(location=default_location, popup="Tel Aviv").add_to(m)
+map_data = st_folium(m, width=700, height=500)
+
+# --- Determine Coordinates ---
+lat, lon = None, None
+
+if map_data and map_data.get("last_clicked"):
+    lat = map_data["last_clicked"]["lat"]
+    lon = map_data["last_clicked"]["lng"]
+    st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
 
 # Only proceed if city_name is entered
-if city_name:
+elif city_name:
     params_imperial = {"q": city_name, 'units': 'imperial', "appid": appid}
     params_metric = {"q": city_name, 'units': 'metric', "appid": appid}
     params_location = {"q": city_name, "limit": 1, "appid": appid}
@@ -41,6 +57,7 @@ if city_name:
 
     lat = coordinates_post[0]['lat']
     lon = coordinates_post[0]['lon']
+    st.success(f"📍 Found {city_name.title()} at Latitude {lat:.2f}, Longitude {lon:.2f}")
 
      # current weather data
     curr_weather_imperial = requests.get(curr_weather_url,params=params_imperial)
@@ -181,3 +198,4 @@ if city_name:
     print("Loaded API Key:", os.getenv("OPENWEATHER_API_KEY"))
 else:
     st.info("👆 Enter a City Name Above to See Weather Data")
+    st.stop()
