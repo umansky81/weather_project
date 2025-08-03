@@ -1,6 +1,12 @@
 # import modules
 import string
 import streamlit as st
+
+if 'clear_city_input' in st.session_state and st.session_state.clear_city_input:
+    st.session_state.city_input = ""
+    st.session_state.clear_city_input = False
+    st.experimental_rerun()
+
 import pandas as pd
 import seaborn as sns
 import datetime as dt
@@ -29,23 +35,12 @@ if 'city_input' not in st.session_state:
 if 'clear_city_input' not in st.session_state:
     st.session_state.clear_city_input = False
 
-if st.session_state.clear_city_input:
-    st.session_state.city_input = ""
-    st.session_state.clear_city_input = False
-    st.experimental_rerun()
-
 # UI Setup
 st.set_page_config(page_title="Weather App", page_icon="🌤️", layout="centered")
 st.title("🌦️ Welcome to Your Weather Companion")
 st.markdown("Enter a city name or select a location on the map to get weather updates.")
 
-# --- Input Options ---
-if st.session_state.clear_city_input:
-    st.session_state.city_input = ""
-    st.session_state.clear_city_input = False
-
 city_name_input = st.text_input("📍 Enter City Name", key="city_input")
-
 
 if city_name_input:
     st.session_state.input_source = 'city'
@@ -68,9 +63,6 @@ if map_data and map_data.get("last_clicked"):
     st.session_state.city_name = None  # Clear previous city name
     st.session_state.clear_city_input = True
     st.success(f"📌 Location Selected: Latitude {lat:.2f}, Longitude {lon:.2f}")
-    if "city_input" in st.session_state:
-        st.session_state.clear_city_input = True
-        st.experimental_rerun()
 
 # Only proceed if city_name is entered
 elif st.session_state.input_source == 'city' and st.session_state.city_name:
