@@ -244,9 +244,6 @@ else:
         tile_color = "#34495E"  # A dark slate blue for a sleek look
         text_color = "#FFFFFF"  # White text for contrast
 
-        st.markdown("### 🌟 Current Weather Summary")
-        cols = st.columns(len(tile_data))
-
         for i, (label, value) in enumerate(tile_data.items()):
             with cols[i]:
                 st.markdown(
