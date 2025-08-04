@@ -3,6 +3,7 @@ import string
 import streamlit as st
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 import datetime as dt
 import meteostat as ms
 import requests
