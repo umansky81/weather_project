@@ -257,6 +257,36 @@ else:
                     """,
                     unsafe_allow_html=True
                 )
+# --- Forecast Section ---
+st.markdown("### 📅 5-Day Forecast")
+
+# Choose the correct dataset
+forecast_data = daily_summary_metric if unit_system == "Metric" else daily_summary_imperial
+
+# Create columns for each day
+forecast_cols = st.columns(len(forecast_data))
+
+# Loop through forecast data and display each day's summary
+for i, day in enumerate(forecast_data):
+    with forecast_cols[i]:
+        icon_url = f"http://openweathermap.org/img/wn/{day['Icon']}@2x.png"
+        st.markdown(
+            f"""
+            <div style="background-color: #2C3E50; padding: 15px; border-radius: 10px;
+                        text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); color: #ECF0F1;">
+                <div style="font-size: 16px; font-weight: bold; margin-bottom: 5px;">{day['Date']}</div>
+                <img src="{icon_url}" width="60" alt="weather icon">
+                <div style="margin-top: 5px; font-size: 14px;">{day['Weather_Type']}</div>
+                <div style="margin-top: 10px; font-size: 14px;">
+                    🌡️ {day.get('Temp_C_Min', day.get('Temp_F_Min'))}° / {day.get('Temp_C_Max', day.get('Temp_F_Max'))}°
+                </div>
+                <div style="margin-top: 5px; font-size: 14px;">
+                    💨 {day.get('Wind_Speed_KPH', day.get('Wind_Speed_MPH'))} { 'km/h' if unit_system == 'Metric' else 'mph' }
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 
 
