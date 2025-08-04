@@ -249,7 +249,7 @@ else:
                 st.markdown(
                     f"""
                     <div style="background-color: {tile_color}; padding: 15px; border-radius: 10px; 
-                                text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); color: {text_color};">
+                                text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); color: {text_color};height: 120px;">
                         <h4 style="margin-bottom: 10px;">{label}</h4>
                         <p style="font-size: 24px; font-weight: bold; margin: 0;">{value}</p>
                     </div>
