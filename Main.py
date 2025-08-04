@@ -288,6 +288,7 @@ for i, day in enumerate(forecast_data):
             """,
             unsafe_allow_html=True
         )
+
 # Add spacing below forecast tiles
 st.markdown("<br><br>", unsafe_allow_html=True)
 
@@ -313,12 +314,26 @@ else:
 
 plot_df = plot_df.melt(id_vars='Date', var_name='Type', value_name='Temperature')
 
+# Create plot
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(
+    data=plot_df,
+    x='Date',
+    y='Temperature',
+    hue='Type',
+    marker='o',
+    ax=ax,
+    linewidth=3  # Thicker lines
+
+
 # Set a cheerful theme
 sns.set_theme(style="whitegrid", palette="pastel")
 
 # Create plot
 fig, ax = plt.subplots(figsize=(10, 5))
 sns.lineplot(data=plot_df, x='Date', y='Temperature', hue='Type', marker='o', ax=ax)
+
+# Make it "happy"
 ax.set_title("🌞 Upcoming Weather vs Historical Avg", fontsize=18, fontweight='bold', color='#2C3E50')
 ax.set_ylabel(ylabel, fontsize=14)
 ax.set_xlabel("Date", fontsize=14)
@@ -331,4 +346,3 @@ plt.tight_layout()
 
 # Display in Streamlit
 st.pyplot(fig)
-
