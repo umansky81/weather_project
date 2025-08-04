@@ -239,9 +239,15 @@ else:
         # Display tiles in columns
         st.markdown("### 🌟 Current Weather Summary")
         cols = st.columns(len(tile_data))
+
         for i, (label, value) in enumerate(tile_data.items()):
             with cols[i]:
                 st.markdown(
-                    f"<div style='text-align: center; padding: 10px; border-radius: 10px; background-color: #f0f2f6;'>"
-                    f"<h4>{label}</h4><p style='font-size: 20px; font-weight: bold;'>{value}</p></div>",
-                    unsafe_allow_html=True)
+                    f"""
+                    <div style="background-color: #e8f0fe; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+                        <h4 style="margin-bottom: 10px;">{label}</h4>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">{value}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
