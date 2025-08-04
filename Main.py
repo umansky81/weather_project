@@ -287,3 +287,41 @@ for i, day in enumerate(forecast_data):
             """,
             unsafe_allow_html=True
         )
+# Prepare forecast DataFrame
+forecast_df = pd.DataFrame(forecast_data)
+
+# Convert date strings to datetime objects
+forecast_df['Date'] = pd.to_datetime(forecast_df['Date'], format='%d/%m/%Y' if unit_system == 'Metric' else '%m/%d/%Y')
+forecast_df['month'] = forecast_df['Date'].dt.strftime('%m-%Y')
+
+# Merge with historical averages
+merged_df = forecast_df.merge(df_agg.reset_index(), on='month', how='left')
+
+# Melt the DataFrame for Seaborn
+if unit_system == "Metric":
+    plot_df = merged_df[['Date', 'Temp_C_Min', 'Temp_C_Max', 'Temp_C_Avg']].rename(
+        columns={'Temp_C_Min': 'Min Temp', 'Temp_C_Max': 'Max Temp', 'Temp_C_Avg': 'Historical Avg'}
+    )
+    ylabel = "Temperature (°C)"
+else:
+    plot_df = merged_df[['Date', 'Temp_F_Min', 'Temp_F_Max', 'Temp_F_Avg']].rename(
+        columns={'Temp_F_Min': 'Min Temp', 'Temp_F_Max': 'Max Temp', 'Temp_F_Avg': 'Historical Avg'}
+    )
+    ylabel = "Temperature (°F)"
+
+plot_df = plot_df.melt(id_vars='Date', var_name='Type', value_name='Temperature')
+
+# Plot with Seaborn
+sns.set_theme(style="darkgrid")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(data=plot_df, x='Date', y='Temperature', hue='Type', marker='o', ax=ax)
+
+# Customize plot
+ax.set_title("📊 Forecast vs Historical Average")
+ax.set_ylabel(ylabel)
+ax.set_xlabel("Date")
+ax.legend(title="Temperature Type")
+plt.xticks(rotation=45)
+
+# Display in Streamlit
+st.pyplot(fig)
