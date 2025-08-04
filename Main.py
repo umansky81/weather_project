@@ -198,4 +198,50 @@ else:
             'tavg_f': 'Temp_F_Avg'
         }, inplace=True)
 
-        st.write(daily_summary_metric)
+        # --- Weather Summary Visualization ---
+
+        # Unit selection
+        unit_system = st.radio("🌡️ Select Unit System", ["Metric", "Imperial"])
+        weather_data = curr_weather_metric if unit_system == "Metric" else curr_weather_imperial
+
+        # Icon URL from OpenWeatherMap
+        icon_code = curr_weather_details['Icon']
+        icon_url = f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
+
+        # Display location and time
+        st.markdown(f"## 📍 {curr_weather_details['City']}, {curr_weather_details['Country']}")
+        st.markdown(
+            f"**🕒 Local Time:** {weather_data['Local_Time']} &nbsp;&nbsp; 📅 **Date:** {weather_data['Local_Date']}")
+
+        # Display weather icon and description
+        col_icon, col_desc = st.columns([1, 4])
+        with col_icon:
+            st.image(icon_url, width=80)
+        with col_desc:
+            st.markdown(f"### {curr_weather_details['Weather_Type'].capitalize()}")
+
+        # Create tiles for key metrics
+        if unit_system == "Metric":
+            tile_data = {
+                "🌡️ Temperature": f"{weather_data['Temp_C']}°C",
+                "🤗 Feels Like": f"{weather_data['Feels_Like_C']}°C",
+                "💨 Wind Speed": f"{weather_data['Wind Speed_KPH']} km/h",
+                "💧 Humidity": curr_weather_details['Humidity']
+            }
+        else:
+            tile_data = {
+                "🌡️ Temperature": f"{weather_data['Temp_F']}°F",
+                "🤗 Feels Like": f"{weather_data['Feels_Like_F']}°F",
+                "💨 Wind Speed": f"{weather_data['Wind_Speed_MPH']} mph",
+                "💧 Humidity": curr_weather_details['Humidity']
+            }
+
+        # Display tiles in columns
+        st.markdown("### 🌟 Current Weather Summary")
+        cols = st.columns(len(tile_data))
+        for i, (label, value) in enumerate(tile_data.items()):
+            with cols[i]:
+                st.markdown(
+                    f"<div style='text-align: center; padding: 10px; border-radius: 10px; background-color: #f0f2f6;'>"
+                    f"<h4>{label}</h4><p style='font-size: 20px; font-weight: bold;'>{value}</p></div>",
+                    unsafe_allow_html=True)
