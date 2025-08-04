@@ -240,14 +240,19 @@ else:
         st.markdown("### 🌟 Current Weather Summary")
         cols = st.columns(len(tile_data))
 
+        # Define a list of soft background colors for variety
+        tile_colors = ["#d0e6ff", "#c8f4f9", "#d5f5e3", "#f9e79f", "#f5cba7", "#e8daef"]
+
         for i, (label, value) in enumerate(tile_data.items()):
+            color = tile_colors[i % len(tile_colors)]  # Cycle through colors
             with cols[i]:
                 st.markdown(
                     f"""
-                    <div style="background-color: #e8f0fe; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+                    <div style="background-color: {color}; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
                         <h4 style="margin-bottom: 10px;">{label}</h4>
                         <p style="font-size: 24px; font-weight: bold; margin: 0;">{value}</p>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
+
