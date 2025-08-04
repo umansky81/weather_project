@@ -9,6 +9,7 @@ import requests
 import os
 import json
 import folium
+import altair as alt
 from collections import defaultdict, Counter
 from dotenv import load_dotenv
 from streamlit_folium import st_folium
@@ -287,6 +288,45 @@ for i, day in enumerate(forecast_data):
             """,
             unsafe_allow_html=True
         )
+# --- Add Weather Forecast Graph ---
+st.markdown("### 📊 5-Day Temperature Forecast")
 
+# Convert the forecast data list into a pandas DataFrame for easier plotting
+forecast_df = pd.DataFrame(forecast_data)
+# Ensure the Date column is in datetime format for correct plotting on the x-axis
+forecast_df['Date'] = pd.to_datetime(forecast_df['Date'])
+
+# Create Altair charts for min and max temperatures
+if unit_system == "Metric":
+    temp_min_col = 'Temp_C_Min'
+    temp_max_col = 'Temp_C_Max'
+    temp_unit = '°C'
+else:
+    temp_min_col = 'Temp_F_Min'
+    temp_max_col = 'Temp_F_Max'
+    temp_unit = '°F'
+
+# Plotting with Altair
+line_min = alt.Chart(forecast_df).mark_line(point=True, color='#1E90FF').encode(
+    x=alt.X('Date', axis=alt.Axis(title='Date', format='%b %d')),
+    y=alt.Y(temp_min_col, axis=alt.Axis(title=f'Temperature ({temp_unit})')),
+    tooltip=[alt.Tooltip('Date', format='%b %d'), alt.Tooltip(temp_min_col, title='Min Temp')]
+).properties(
+    title='Minimum Temperature'
+)
+
+line_max = alt.Chart(forecast_df).mark_line(point=True, color='#FF4500').encode(
+    x=alt.X('Date', axis=alt.Axis(title='Date', format='%b %d')),
+    y=alt.Y(temp_max_col, axis=alt.Axis(title=f'Temperature ({temp_unit})')),
+    tooltip=[alt.Tooltip('Date', format='%b %d'), alt.Tooltip(temp_max_col, title='Max Temp')]
+).properties(
+    title='Maximum Temperature'
+)
+
+# Combine the charts
+combined_chart = line_min + line_max
+
+# Display the combined chart in Streamlit
+st.altair_chart(combined_chart, use_container_width=True)
 
 
