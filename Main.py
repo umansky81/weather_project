@@ -241,7 +241,7 @@ else:
         cols = st.columns(len(tile_data))
 
         # Define a list of soft background colors for variety
-        tile_colors = ["#d0e6ff", "#c8f4f9", "#d5f5e3", "#f9e79f", "#f5cba7", "#e8daef"]
+        tile_colors = ["#34495E", "#2E4053", "#1C2833", "#566573", "#4D5656", "#212F3C"]
 
         for i, (label, value) in enumerate(tile_data.items()):
             color = tile_colors[i % len(tile_colors)]  # Cycle through colors
